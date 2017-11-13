@@ -47,12 +47,13 @@ void WriteLeftLine(vector<char> line, char fileName[61]) {
 	for (int i = 0; i < line.size(); i++) {
 		putc(line[i], fWrite);
 	}
+	cout << "Файл вiдкрився для зчитування iнформацiї.\nВміст файла:" << endl;
 	fclose(fWrite);
 	
 }
 
 void OutputLine(vector<vector <char>> line,int n) {
-	cout << "Файл вiдкрився для зчитування iнформацiї.\nВміст файла:" << endl;
+	
 	cout << "________________________________________________________________________________" << endl;
 	cout << "Прiзвище |Iм'я |По батьковi |Факультет |Спецiальність батька |матерi |Кiлькiсть братiв i сестер|" << endl;
 	cout << "________________________________________________________________________________" << endl;
@@ -142,6 +143,76 @@ void AddPerson(vector<vector <char>>& line, int& n) {
 
 
 
+void SortLine(vector<vector <char>>& line, int& n) {
+	
+	
+	for (int i = 0; i < n - 1; i++) {
+		for (int k = 0; k < n - i - 1; k++) {
+			bool chekingName=false;
+			for (int iSymbol = 0; iSymbol < 10; iSymbol++) {
+				if (line[k][iSymbol] != ';' || line[k + 1][iSymbol] != ';') {
+					if (line[k][iSymbol] > line[k + 1][iSymbol]) {
+						chekingName = true;
+						cout << line[k][iSymbol]<<'>' << line[k + 1][iSymbol]<< endl;
+						break;
+					}
+					if (line[k][iSymbol] == line[k + 1][iSymbol]) {
+						cout << line[k][iSymbol] << '=' << line[k + 1][iSymbol] << endl;
+						if (line[k][iSymbol + 1] > line[k + 1][iSymbol + 1]) {
+							chekingName = true;
+							cout << line[k][iSymbol + 1]<< ">" << line[k + 1][iSymbol + 1]<<endl;
+							break;
+
+						}
+						if (line[k][iSymbol + 1] < line[k + 1][iSymbol + 1]) {
+							chekingName = false;
+							cout << line[k][iSymbol + 1]<< "<" << line[k + 1][iSymbol + 1]<< endl;
+							break;
+
+						}
+					}
+				}
+			}
+			cout << chekingName << endl;
+			if (chekingName) {
+				char auxiliary1[100];
+				char auxiliary2[100];
+				int n1 = line[k].size(), n2 = line[k+1].size();
+				for (int j = 0; j < n1; j++) {
+					auxiliary1[j] = line[k][j];
+				}
+				for (int j = 0; j < n2; j++) {
+					auxiliary2[j] = line[k+1][j];
+				}
+				line[k].clear();
+				line[k+1].clear();
+
+				for (int j = 0; j < n1; j++) {
+					line[k+1].push_back(auxiliary1[j]);
+				}
+				for (int j = 0; j < n2; j++) {
+					line[k].push_back(auxiliary2[j]);
+				}
+			}
+
+		}
+	}
+}
+
+//bool ChekingName(vector<vector <char>> line, int k) {
+//	int iSymbol=0;
+//	while (line[k][iSymbol] != ';' || line[k+1][iSymbol] != ';') {
+//		if (line[k][iSymbol] > line[k+1][iSymbol] || (line[k][iSymbol] == line[k+1][iSymbol] && line[k][iSymbol + 1] > line[k+1][iSymbol + 1]))
+//			return true;
+//
+//		iSymbol++;
+//	}
+//	return false;
+//
+//
+//}
+
+
 
 
 int main() {
@@ -154,7 +225,7 @@ int main() {
 	if (OpenFile(line,n)) {
 		OutputLine(line,n);//вивід даних з файла
 		cout << "1-Видалення даних про задану персону\n2-Додання даних про нову персону\n";
-		AddPerson(line, n);
+		SortLine(line, n);
 		OutputLine(line, n);
 		/*switch menu {
 		case 1:
@@ -163,7 +234,7 @@ int main() {
 			OutputLine(line, n);
 			break;
 		case 2:
-			(line, n);
+			AddPerson(line, n);
 			OutputLine(line, n);
 			break;
 		}*/
